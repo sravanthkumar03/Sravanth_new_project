@@ -16,4 +16,4 @@ This is my personal portfolio project.
 - Modern Layout
 
 ## 📬 Contact
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/sravanthkumar03
