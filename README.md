@@ -19,4 +19,4 @@ A responsive hotel booking website inspired by OYO, designed to provide users wi
 * JavaScript
 🎯 Objective
 
-To demonstrate strong front-end development skills, UI design understanding, and the ability to build real-world web applications.
+To demonstrate strong front-end development skills, UI design understanding, and the ability to build real-world web applications
