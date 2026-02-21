@@ -1,19 +1,22 @@
-# Sravanth_new_project
-Personal Portfolio Website by Sravanth Kumar
-# Sravanth Kumar Portfolio
+ Project: OYO Clone – Hotel Booking Website
+Developed by Sravanth Kumar
 
-Hi, I'm Sravanth Kumar 👋  
-This is my personal portfolio project.
+🚀 Project Description
+A responsive hotel booking website inspired by OYO, designed to provide users with a seamless room browsing and booking experience. The project focuses on clean UI, structured layout, and user-friendly navigation.
 
-## 🚀 Technologies Used
-- HTML
-- CSS
-- JavaScript
+💡 Key Highlights
 
-## 📌 Features
-- Responsive Design
-- Clean UI
-- Modern Layout
+✅ Responsive design (Mobile + Desktop compatible)
+✅ Modern and clean user interface
+✅ Structured hotel listing layout
+✅ Interactive navigation and booking section
+✅ Optimized front-end performance
 
-## 📬 Contact
-GitHub: https://github.com/sravanthkumar03
+
+🛠️ Technologies Used
+* HTML
+* CSS
+* JavaScript
+🎯 Objective
+
+To demonstrate strong front-end development skills, UI design understanding, and the ability to build real-world web applications.
