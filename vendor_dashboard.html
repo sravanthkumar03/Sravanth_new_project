@@ -1,0 +1,57 @@
+{% extends 'utils/base.html' %}
+
+
+{% block start %}
+
+{% include 'utils/vendor_navbar.html' %}
+{% include 'utils/alerts.html' with only_tag='hotel' %}
+
+<div class="d-flex justify-content-center my-3">
+    <a href="{% url 'add_hotel' %}" class="btn btn-primary">Add Hotel</a>
+</div>
+
+<div class="container mt-5">
+    <h2>Your Hotels</h2>
+    <div class="row">
+        {% for hotel in hotels %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                {% if hotel.hotel_images.first %}
+                <img src="{{ hotel.hotel_images.first.image.url }}" class="card-img-top" style="height:200px;object-fit:cover;">
+                {% else %}
+                <div style="height:200px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;">No image</div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ hotel.hotel_name }}</h5>
+                    <p class="card-text">{{ hotel.hotel_description|truncatechars:100 }}</p>
+
+                    {% for amenetie in hotel.ameneties.all %}
+                        <span class="badge bg-primary">{{ amenetie.amenetie_name }}</span>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+            
+
+                <form action="{% url 'delete_hotel' hotel.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete Hotel</button>
+                </form>
+
+                <form action="{% url 'edit_hotel' hotel.id %}" method="get" style="display:inline;"> 
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Edit Details</button> 
+                </form>
+                
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+    
+</div>
+
+{% endblock %}

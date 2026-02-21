@@ -1,0 +1,183 @@
+{% extends 'utils/base.html' %}
+
+{% block title %}Find Your Perfect Stay - OYO Stays{% endblock %}
+
+{% block start %}
+
+{% include 'utils/navbar.html' %}
+{% include 'utils/alerts.html' %}
+
+<!-- Hero Section with Search -->
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center;">
+    <div class="container">
+        <h1 class="mb-3" style="font-size: 48px; font-weight: 700;">Find Your Perfect Stay</h1>
+        <p style="font-size: 18px; opacity: 0.9; margin-bottom: 30px;">Discover amazing hotels and book your next adventure</p>
+        
+        <!-- Search Form -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form method="GET" class="d-flex gap-2">
+                    <div class="input-group" style="border-radius: 30px; overflow: hidden;">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            class="form-control border-0" 
+                            placeholder="Search hotels by name, location, or description..." 
+                            value="{{ search_query }}"
+                            style="padding: 12px 20px;"
+                        >
+                        <button type="submit" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0 30px; font-weight: 600;">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                    {% if search_query %}
+                        <a href="{% url 'index' %}" class="btn btn-light" style="border-radius: 30px; padding: 0 30px; font-weight: 600;">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
+                    {% endif %}
+                </form>
+                <small style="opacity: 0.85; margin-top: 15px; display: block;">
+                    Showing <strong>{{ filtered_count }}</strong> of <strong>{{ total_hotels }}</strong> hotels
+                    {% if search_query %}
+                        for "<strong>{{ search_query }}</strong>"
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hotels Display Section -->
+<div class="container my-5">
+    {% if hotels %}
+        <div class="mb-4">
+            <h2 class="section-title" style="display: inline-block;">
+                <i class="bi bi-building"></i> Available Hotels
+            </h2>
+        </div>
+        
+        <div class="row g-4">
+            {% for hotel in hotels %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 overflow-hidden" style="border: none;">
+                        <!-- Hotel Image Badge -->
+                        <div style="position: relative; height: 220px; overflow: hidden; background: #e9ecef;">
+                            {% if hotel.hotel_images.all %}
+                                <img src="{{ hotel.hotel_images.first.image.url }}" alt="{{ hotel.hotel_name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                            {% else %}
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                                    <i class="bi bi-image" style="font-size: 60px; color: #adb5bd;"></i>
+                                </div>
+                            {% endif %}
+                            
+                            {% if hotel.hotel_offer_price %}
+                                <span class="badge" style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 8px 12px; font-size: 13px;">
+                                    <i class="bi bi-lightning-fill"></i> Special Offer
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Hotel Info -->
+                        <div class="card-body">
+                            <h5 class="card-title mb-2" style="color: #2d3748; font-weight: 600;">{{ hotel.hotel_name }}</h5>
+                            
+                            <p class="card-text small mb-3" style="color: #667eea; font-weight: 500;">
+                                <i class="bi bi-geo-alt-fill"></i> {{ hotel.hotel_location }}
+                            </p>
+                            
+                            <p class="card-text small text-muted" style="line-height: 1.5;">
+                                {{ hotel.hotel_description|truncatewords:15 }}
+                            </p>
+                            
+                            <!-- Amenities -->
+                            {% if hotel.ameneties.all %}
+                                <div class="mb-3">
+                                    <small clase="text-muted d-block mb-2"><strong>Amenities</strong></small>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for amenity in hotel.ameneties.all|slice:":3" %}
+                                            <span class="badge" style="background: #f0f9ff; color: #0c4a6e; border: 1px solid #0ea5e9;">{{ amenity.amenetie_name }}</span>
+                                        {% endfor %}
+                                        {% if hotel.ameneties.count > 3 %}
+                                            <span class="badge" style="background: #f3f4f6; color: #4b5563;">+{{ hotel.ameneties.count|add:"-3" }} more</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Price Section -->
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 12px; margin-top: 12px;">
+                                <div class="d-flex justify-content-between align-items-end mb-3">
+                                    <div>
+                                        {% if hotel.hotel_offer_price %}
+                                            <small class="text-muted text-decoration-line-through">₹{{ hotel.hotel_price|floatformat:0 }}</small>
+                                            <h5 class="mb-0" style="color: #22c55e; font-weight: 700;">₹{{ hotel.hotel_offer_price|floatformat:0 }} <small style="font-size: 13px;">/night</small></h5>
+                                        {% else %}
+                                            <h5 class="mb-0" style="color: #667eea; font-weight: 700;">₹{{ hotel.hotel_price|floatformat:0 }} <small style="font-size: 13px;">/night</small></h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Button -->
+                        <div class="card-footer bg-white border-0 p-3">
+                            <a href="{% url 'hotel_detail' hotel.hotel_slug %}" class="btn btn-primary w-100" style="border-radius: 20px; font-weight: 600;">
+                                <i class="bi bi-arrow-right"></i> View & Book
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div style="font-size: 80px; margin-bottom: 20px;">
+                <i class="bi bi-search" style="color: #c7d2e0;"></i>
+            </div>
+            <h4>No hotels found</h4>
+            {% if search_query %}
+                <p class="text-muted mb-3">No hotels match your search for "<strong>{{ search_query }}</strong>". Try searching with different keywords.</p>
+                <a href="{% url 'index' %}" class="btn btn-primary" style="border-radius: 20px;">
+                    <i class="bi bi-arrow-left"></i> Back to All Hotels
+                </a>
+            {% else %}
+                <p class="text-muted">No hotels are currently available.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Footer -->
+<footer class="mt-5" style="background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; padding: 40px 20px;">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5 class="mb-3" style="font-weight: 600;">
+                    <img height="40" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZKOfiwliX-Wcoz6A8ahpujWBo-QI6P6lRKH7GHcm-lw&s" alt="OYO" style="margin-right: 10px; vertical-align: middle;">
+                    OYO Stays
+                </h5>
+                <p class="text-muted" style="font-size: 14px;">Your trusted partner for finding the perfect accommodation at unbeatable prices.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-2">
+                    <a href="{% url 'vendor_register' %}" class="btn btn-sm btn-light" style="border-radius: 20px; margin-right: 8px;">
+                        <i class="bi bi-shop"></i> Become a Vendor
+                    </a>
+                    <a href="{% url 'vendor_login' %}" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                        <i class="bi bi-box-arrow-in-right"></i> Vendor Login
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <hr style="opacity: 0.2;">
+        
+        <div class="text-center" style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p class="mb-0" style="font-size: 14px; opacity: 0.8;">
+                © 2024 OYO Stays. All rights reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
